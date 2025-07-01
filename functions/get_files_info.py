@@ -6,7 +6,7 @@ import os
 def get_files_info(working_directory, directory=None):
 	abs_working_dir = os.path.abspath(working_directory)
 	target_dir = abs_working_dir
-	#test if directory is outside working_directory
+	#test if directory is valid or outside working_directory
 	if directory:
 		target_dir = os.path.abspath(os.path.join(working_directory, directory))
 	if not target_dir.startswith(abs_working_dir):

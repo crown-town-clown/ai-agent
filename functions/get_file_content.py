@@ -1,4 +1,6 @@
 import os
+from google import genai
+from google.genai import types
 MAX_CHARS = 10000
 
 #define get_file_content function. Takes working_directory and file_path string arguments, returns
@@ -22,3 +24,19 @@ def get_file_content(working_directory, file_path):
 	if os.path.getsize(file) > MAX_CHARS:
 		return file_content + f'[...File "{file_path}" truncated at 10000 characters]'
 	return file_content
+
+
+#build the function declartion so that the LLM(gemini) knows what this function is
+schema_get_file_content = types.FunctionDeclaration(
+	name ="get_file_content",
+	description="Reads the file specified in the file path.",
+	parameters=types.Schema(
+		type=types.Type.OBJECT,
+		properties={
+			"file_path": types.Schema(
+				type=types.Type.STRING,
+				description="The file path of the file to be read, relative to the working directory.",
+			),
+		},
+	),
+)

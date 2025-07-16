@@ -1,5 +1,7 @@
 import os
 import subprocess
+from google import genai
+from google.genai import types
 
 #define run_python_file function to run python files. takes working_directory and file_path string
 #arguments
@@ -34,3 +36,19 @@ def run_python_file(working_directory, file_path):
 		return "\n".join(result)
 	except Exception as e:
 		return f'Error executing Python file: {e}'
+
+
+#build the declaration for run_python_file so that the LLM(gemini) knows what it is
+schema_run_python_file = types.FunctionDeclaration(
+	name="run_python_file",
+	description="Runs the Python file specified in the file path.",
+	parameters=types.Schema(
+		type=types.Type.OBJECT,
+		properties={
+			"file_path": types.Schema(
+				type=types.Type.STRING,
+				description="The file path of the specified Python file, relative to the working directory.",
+			),
+		},
+	),
+)

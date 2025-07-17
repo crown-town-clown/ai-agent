@@ -1,4 +1,6 @@
 import os
+from google import genai
+from google.genai import types
 
 #define write_file function to write and overwrite files
 def write_file(working_directory, file_path, content):
@@ -25,3 +27,23 @@ def write_file(working_directory, file_path, content):
 		return f'Successfully wrote to "{file_path}" ({len(content)} characters written)'
 	except Exception as e:
 		return f'Error writing to the file: {e}'
+
+
+#build the declaration for write_file so that the LLM(gemini) knows how it works
+schema_write_file = types.FunctionDeclaration(
+	name="write_file",
+	description="Writes or overwrites a Python file in the specified file path with the content provided.",
+	parameters=types.Schema(
+		type=types.Type.OBJECT,
+		properties={
+			"file_path": types.Schema(
+				type=types.Type.STRING,
+				description="The file path of the specified file, relative to the working directory.",
+			),
+			"content": types.Schema(
+				type=types.Type.STRING,
+				description="The content that will be written to the file.",
+			),
+		},
+	),
+)

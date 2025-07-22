@@ -41,8 +41,22 @@ response = client.models.generate_content(
 		tools=[available_functions], system_instruction=system_prompt
 	),
 )
+#create a list to hold all messages in the current conversation with the LLM
+function_responses = []
 
+#rewrite 
+if len(response.function_calls) > 0:
+	print(f"Calling function: {response.function_calls[0].name}({response.function_calls[0].args})")
+	result = call_function(response.function_calls[0])
+	#check if result has .parts[0].function_response.response
+	if not result.parts[0].function_response.response:
+		raise Exception("Error: no function response")
+	if sys.argv[-1] == "--verbose":
+		print(f"-> {result.parts[0].function_response.response}")
+else:
+	print(response.text)
 
+"""
 if sys.argv[-1] == "--verbose":
 	if len(response.function_calls) > 0:
 		print(f"Calling function: {response.function_calls[0].name}({response.function_calls[0].args})")
@@ -67,3 +81,4 @@ else:
 		#print(f"-> {result.parts[0].function_response.response}")
 	else:
 		print(response.text)
+"""
